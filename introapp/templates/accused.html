@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accused Response</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Font Awesome fallback icons */
+        .fas::before { content: "•"; }
+        .fa-shield-alt::before { content: "🛡️"; }
+        .fa-home::before { content: "🏠"; }
+        .fa-file-alt::before { content: "📄"; }
+        .fa-user::before { content: "👤"; }
+        .fa-pause-circle::before { content: "⏸️"; }
+        .fa-stop::before { content: "⏹️"; }
+        .fa-play::before { content: "▶️"; }
+        .fa-redo::before { content: "🔄"; }
+        .fa-stop-circle::before { content: "⏹️"; }
+        .fa-microphone::before { content: "🎤"; }
+        .fa-video::before { content: "📹"; }
+        .fa-camera::before { content: "📷"; }
+        .fa-user-shield::before { content: "👮"; }
+        .fa-arrow-left::before { content: "←"; }
+        .fa-crime-scene::before { content: "🔍"; }
+        .fa-edit::before { content: "✏️"; }
+        .fa-id-badge::before { content: "🆔"; }
+        .fa-list-ol::before { content: "🔢"; }
+        .fa-cogs::before { content: "⚙️"; }
+        .fa-server::before { content: "🖥️"; }
+        .fa-brain::before { content: "🧠"; }
+        .fa-eye::before { content: "👁️"; }
+        .fa-chart-line::before { content: "📊"; }
+        .fa-database::before { content: "💾"; }
+        .fa-exclamation-triangle::before { content: "⚠️"; }
+        .fa-play-circle::before { content: "▶️"; }
+        .fa-list-check::before { content: "✅"; }
+        .fa-trash::before { content: "🗑️"; }
+        .fa-times::before { content: "✖️"; }
+        .fa-spinner::before { content: "⏳"; }
+        .fa-check-circle::before { content: "✅"; }
+        .fa-search::before { content: "🔍"; }
+        .fa-hashtag::before { content: "#️⃣"; }
+        .fa-calendar-alt::before { content: "📅"; }
+        .fa-volume-up::before { content: "🔊"; }
+        .fa-language::before { content: "🌐"; }
+        .fa-gavel::before { content: "⚖️"; }
+        .fa-file-code::before { content: "📄"; }
+        .fa-download::before { content: "⬇️"; }
+        .fa-folder-open::before { content: "📂"; }
+        .fa-angle-double-left::before { content: "⏮️"; }
+        .fa-angle-left::before { content: "◀️"; }
+        .fa-angle-right::before { content: "▶️"; }
+        .fa-angle-double-right::before { content: "⏭️"; }
+        .fa-robot::before { content: "🤖"; }
+        .fa-balance-scale::before { content: "⚖️"; }
+        .fa-stopwatch::before { content: "⏱️"; }
+        .fa-info-circle::before { content: "ℹ️"; }
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0a0a14;
+            color: #e0e0e0;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(28, 58, 173, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(139, 0, 0, 0.1) 0%, transparent 20%);
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: rgba(10, 10, 20, 0.95);
+            border-bottom: 2px solid #1e3a8a;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            color: #dc2626;
+            font-size: 28px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, #dc2626, #1e40af);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            background-color: rgba(30, 58, 138, 0.3);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .box {
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-bottom: 1px solid rgba(30, 58, 138, 0.5);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #dc2626, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .interrogation-layout {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .left-panel {
+            flex: 1;
+            min-width: 320px;
+            text-align: center;
+        }
+
+        .right-panel {
+            width: 420px;
+            max-width: 44vw;
+        }
+
+        .video-wrap {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+        }
+
+        #videoPreview {
+            width: 100%;
+            height: auto;
+            display: block;
+            transform: scaleX(-1); /* Mirror for natural camera experience */
+        }
+
+        .emotion-card {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .emotion-top {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .emotion-top .label {
+            font-weight: 700;
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        #emotionLabel {
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .emotion-sub {
+            font-size: 12px;
+            line-height: 1.4;
+            opacity: 0.95;
+            white-space: pre-wrap;
+        }
+
+        .timer {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .pause-btn {
+            background-color: rgba(30, 58, 138, 0.7);
+            color: #ffffff;
+            border: 1px solid #3b82f6;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+
+        .pause-btn:hover {
+            background-color: rgba(59, 130, 246, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        @media (max-width: 900px) {
+            .interrogation-layout {
+                flex-direction: column;
+                align-items: center;
+            }
+            .right-panel {
+                width: 100%;
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 20px;
+                padding: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <span class="logo-text">AI INTERROGATION SYSTEM</span>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'index' %}"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="{% url 'reports' %}"><i class="fas fa-file-alt"></i> Reports</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-user"></i> Accused Response</h1>
+            <p>Answer the question while the system records frames, audio, and transcript. Live emotion labels are updated when visual predictions arrive.</p>
+        </div>
+
+        <div class="box">
+        <div class="interrogation-layout">
+            <div class="left-panel">
+                <h1 id="questionText">Loading...</h1>
+                <div class="progress" id="progressText"></div>
+                <div class="timer" id="timerText"></div>
+                <br>
+                <button id="pauseBtn" onclick="togglePause()" class="pause-btn">
+                    <i class="fas fa-pause-circle"></i>
+                    Pause
+                </button>
+            </div>
+            <div class="right-panel">
+                <div class="video-wrap">
+                    <video id="videoPreview" autoplay muted playsinline></video>
+                    <div class="emotion-card">
+                        <div class="emotion-top">
+                            <div class="label">Emotion</div>
+                            <div id="emotionLabel">Loading...</div>
+                        </div>
+                        <div class="emotion-sub" id="emotionConfidence"></div>
+                        <div class="emotion-sub" id="emotionRaw"></div>
+                        <button id="retryCameraBtn" type="button" onclick="retryCamera()"
+                            style="display:none; margin-top:10px; padding:10px 14px; border-radius:8px; border:1px solid #3b82f6; background: rgba(59,130,246,0.15); color:#cbd5e1; cursor:pointer; font-weight:700;">
+                            Retry Camera
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id="session-config" data-question-count="{{ question_count|default:5 }}"
+        data-individual-times="{{ individual_times|safe }}" style="display:none;"></div>
+    <script id="questions-json" type="application/json">{{ questions_json|safe }}</script>
+
+    <script>
+        /* ==============================
+           DATA FROM BACKEND
+        ============================== */
+        const QUESTIONS = JSON.parse(document.getElementById('questions-json').textContent);
+        const sessionConfig = document.getElementById('session-config');
+        const QUESTION_COUNT = parseInt(sessionConfig.dataset.questionCount, 10);
+        const INDIVIDUAL_TIMES = JSON.parse(sessionConfig.dataset.individualTimes || '[]');
+        console.log("QUESTIONS:", QUESTIONS);
+        console.log("INDIVIDUAL_TIMES:", INDIVIDUAL_TIMES);
+
+        /* ==============================
+           CONFIG
+        ============================== */
+        const GAP_DURATION = 5;
+        const FRAME_INTERVAL = 1000;
+        const DEFAULT_SECONDS_PER_QUESTION = 60;
+
+        /* ==============================
+           STATE
+        ============================== */
+        let currentIndex = 0;
+        let countdownInterval;
+        let frameInterval;
+
+        let transcriptText = "";
+        let audioChunks = [];
+        let isPaused = false;
+        let framesCaptured = 0;
+        const MAX_FRAMES = 50;
+
+        let recognition;
+        let audioContext, audioStream, processor;
+        let videoStream, videoEl;
+
+        let cameraStartPromise = null;
+        let cameraActive = false;
+
+        const emotionLabelEl = document.getElementById('emotionLabel');
+        const emotionConfidenceEl = document.getElementById('emotionConfidence');
+        const emotionRawEl = document.getElementById('emotionRaw');
+
+        let lastVisualPrediction = null; // expected: "Lie" | "Truth" from backend
+        let lastVisualConfidence = 0;
+
+        function setEmotionUI(label, confidenceText, rawText) {
+            emotionLabelEl.innerText = label;
+            emotionConfidenceEl.innerText = confidenceText || '';
+            emotionRawEl.innerText = rawText || '';
+        }
+
+        function setCameraError(message) {
+            // Put camera failure into the emotion panel so the UI never stays stuck on "Detecting..."
+            setEmotionUI(
+                'Unavailable',
+                'Camera not available',
+                message ? String(message).slice(0, 120) : 'Camera access failed'
+            );
+
+            const btn = document.getElementById('retryCameraBtn');
+            if (btn) btn.style.display = 'inline-flex';
+        }
+
+        function resetEmotionUI() {
+            lastVisualPrediction = null;
+            lastVisualConfidence = 0;
+            updateEmotionUIFromState();
+        }
+
+        function transcriptHasAnxietySignals(text) {
+            const t = (text || '').toLowerCase();
+            if (!t) return false;
+            // Mirror the backend linguistic heuristic at a UI level.
+            const negativeWords = [
+                "not", "never", "no", "none", "nothing",
+                "didn't", "don't", "wasn't", "weren't",
+                "can't", "won't"
+            ];
+            return negativeWords.some(w => t.includes(w));
+        }
+
+        function updateEmotionUIFromState() {
+            const hasAnxiety = transcriptHasAnxietySignals(transcriptText);
+
+            if (lastVisualPrediction) {
+                const pred = String(lastVisualPrediction).toLowerCase(); // "lie" | "truth"
+                const conf = Number(lastVisualConfidence) || 0;
+
+                if (pred === 'lie') {
+                    if (conf >= 70) {
+                        setEmotionUI('Deception', `Visual confidence: ${conf.toFixed(1)}%`, hasAnxiety ? 'Anxiety detected' : 'No anxiety signals');
+                    } else {
+                        setEmotionUI('Stress', `Visual confidence: ${conf.toFixed(1)}%`, hasAnxiety ? 'Anxiety detected' : 'No anxiety signals');
+                    }
+                    return;
+                }
+
+                // Truth:
+                if (hasAnxiety) {
+                    setEmotionUI('Anxiety', 'Anxiety detected', `Visual: Truth (${conf.toFixed(1)}%)`);
+                } else {
+                    setEmotionUI('Neutral', `Visual confidence: ${conf.toFixed(1)}%`);
+                }
+                return;
+            }
+
+            // No visual yet:
+            if (hasAnxiety) {
+                setEmotionUI('Anxiety', 'Anxiety detected', 'Waiting for visual confirmation...');
+            } else {
+                setEmotionUI('Neutral', '', 'Waiting for visual confirmation...');
+            }
+        }
+
+        /* ==============================
+           START
+        ============================== */
+        startQuestion();
+
+        /* ==============================
+           QUESTION LOOP
+        ============================== */
+        async function startQuestion() {
+            if (currentIndex >= QUESTIONS.length) {
+                document.getElementById("questionText").innerText = "Session Completed";
+                document.getElementById("progressText").innerText = "";
+                // Stop camera only when the whole session is finished.
+                stopSessionCamera();
+                fetch("/analyze_results/", {
+                    method: "POST"
+                });
+
+                return;
+            }
+
+
+            document.getElementById("questionText").innerText = QUESTIONS[currentIndex];
+            document.getElementById("progressText").innerText = `Question ${currentIndex + 1} of ${QUESTION_COUNT}`;
+            framesCaptured = 0; // Reset frame count for new question
+            resetEmotionUI();
+            await startCapture().catch(e => {
+                console.error("Start capture failed:", e);
+            });
+        }
+
+        /* ==============================
+           ANSWER TIMER
+        ============================== */
+        function startAnswerTimer(seconds) {
+            if (countdownInterval) clearInterval(countdownInterval);
+            let timeLeft = seconds;
+            document.getElementById("timerText").innerText = `Time left: ${timeLeft}s`;
+
+            countdownInterval = setInterval(() => {
+                if (isPaused) return;
+
+                timeLeft--;
+                document.getElementById("timerText").innerText = `Time left: ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    stopCapture();
+                }
+            }, 1000);
+        }
+
+        /* ==============================
+           GAP TIMER
+        ============================== */
+        function startGap() {
+            let gap = GAP_DURATION;
+            document.getElementById("questionText").innerText = "Next question in";
+            document.getElementById("timerText").innerText = `${gap}s`;
+
+            countdownInterval = setInterval(() => {
+                gap--;
+                document.getElementById("timerText").innerText = `${gap}s`;
+
+                if (gap <= 0) {
+                    clearInterval(countdownInterval);
+                    currentIndex++;
+                    startQuestion();
+                }
+            }, 1000);
+        }
+
+        /* ==============================
+           START CAPTURE
+        ============================== */
+        async function startCapture() {
+            transcriptText = "";
+            audioChunks = [];
+            resetEmotionUI();
+
+            try {
+                startSpeechToText();
+            } catch (e) {
+                console.error("Speech-to-text start failed:", e);
+            }
+
+            try {
+                const cameraOk = await startCamera();
+                if (!cameraOk) return;
+            } catch (e) {
+                console.error("Camera start failed:", e);
+            }
+
+            try {
+                await startAudio();
+            } catch (e) {
+                console.error("Audio start failed:", e);
+            }
+
+            if (frameInterval) clearInterval(frameInterval);
+            frameInterval = setInterval(captureFrame, FRAME_INTERVAL);
+
+            const currentQuestionTime = INDIVIDUAL_TIMES[currentIndex] || DEFAULT_SECONDS_PER_QUESTION;
+            startAnswerTimer(currentQuestionTime);
+        }
+
+        /* ==============================
+           STOP CAPTURE
+        ============================== */
+        function stopCapture() {
+            clearInterval(frameInterval);
+
+            if (recognition) recognition.stop();
+            if (processor) processor.disconnect();
+            if (audioStream) audioStream.getTracks().forEach(t => t.stop());
+            // Keep camera stream alive across questions.
+            lastVisualPrediction = null;
+            lastVisualConfidence = 0;
+
+            sendAudioAndText();
+            
+            // Only start gap if this is not the last question
+            if (currentIndex < QUESTIONS.length - 1) {
+                startGap();
+            } else {
+                // This was the last question, complete the session immediately
+                currentIndex++;
+                startQuestion();
+            }
+        }
+
+        function sendAudioAndText() {
+            const fd = new FormData();
+            fd.append("type", "audio_text");
+            fd.append("question_index", currentIndex);
+            fd.append("transcript", transcriptText);
+            
+            if (audioChunks.length > 0) {
+                const sampleRate = audioContext ? audioContext.sampleRate : 16000;
+                let samples = null;
+                
+                if (audioChunks.length > 0) {
+                    samples = flattenAudio(audioChunks);
+                }
+                
+                // Fallback: if audio capture failed, send a short silent WAV so the backend
+                // can still persist transcript.txt and avoid crashing on missing audio_file.
+                if (!samples || samples.length === 0) {
+                    samples = new Float32Array(Math.floor(sampleRate * 0.1)); // 100ms silence
+                }
+
+                const wavBlob = encodeWAV(samples, sampleRate);
+
+                fd.append("audio_file", wavBlob, "answer.wav");
+            } else {
+                // Send empty audio if no chunks
+                const emptyWavBlob = encodeWAV(new Float32Array(Math.floor(16000 * 0.1)), 16000);
+                fd.append("audio_file", emptyWavBlob, "answer.wav");
+            }
+
+            fetch("/collect_fst", {
+                method: "POST",
+                body: fd
+            });
+        }
+
+        /* ==============================
+           SPEECH → TEXT
+        ============================== */
+        function startSpeechToText() {
+            if (!('webkitSpeechRecognition' in window)) return;
+
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.lang = "en-US";
+
+            recognition.onresult = e => {
+                for (let i = e.resultIndex; i < e.results.length; i++) {
+                    if (e.results[i].isFinal) {
+                        transcriptText += e.results[i][0].transcript + " ";
+                    }
+                }
+                updateEmotionUIFromState();
+            };
+            recognition.start();
+        }
+
+        /* ==============================
+           AUDIO CAPTURE
+        ============================== */
+        async function startAudio() {
+            audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            audioContext = new AudioContext();
+
+            const source = audioContext.createMediaStreamSource(audioStream);
+            processor = audioContext.createScriptProcessor(4096, 1, 1);
+
+            processor.onaudioprocess = e => {
+                audioChunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+            };
+
+            source.connect(processor);
+            processor.connect(audioContext.destination);
+        }
+
+        /* ==============================
+           CAMERA (HIDDEN)
+        ============================== */
+        async function startCamera() {
+            // Start camera once and keep the stream alive across questions.
+            // This prevents repeated start/stop from causing NotReadableError.
+            if (cameraActive && videoStream) return true;
+            if (cameraStartPromise) return cameraStartPromise;
+
+            cameraStartPromise = (async () => {
+                try {
+                    const candidates = [
+                        { video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } } },
+                        { video: { facingMode: "environment", width: { ideal: 640 }, height: { ideal: 480 } } },
+                        { video: { width: { ideal: 640 }, height: { ideal: 480 } } },
+                        { video: true }
+                    ];
+
+                    let lastErr = null;
+                    for (const constraints of candidates) {
+                        try {
+                            videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                            lastErr = null;
+                            break;
+                        } catch (e) {
+                            lastErr = e;
+                            videoStream = null;
+                        }
+                    }
+
+                    // Fallback: try each available camera by deviceId.
+                    if (!videoStream) {
+                        try {
+                            const devices = await navigator.mediaDevices.enumerateDevices();
+                            const videoDevices = devices.filter(d => d.kind === 'videoinput' && d.deviceId);
+
+                            for (const d of videoDevices) {
+                                try {
+                                    videoStream = await navigator.mediaDevices.getUserMedia({
+                                        video: { deviceId: { exact: d.deviceId }, width: { ideal: 640 }, height: { ideal: 480 } }
+                                    });
+                                    lastErr = null;
+                                    break;
+                                } catch (e) {
+                                    lastErr = e;
+                                    videoStream = null;
+                                }
+                            }
+                        } catch (e) {
+                            lastErr = e;
+                        }
+                    }
+
+                    if (!videoStream) {
+                        throw lastErr || new Error("Could not start video source");
+                    }
+
+                    videoEl = document.getElementById("videoPreview");
+                    if (!videoEl) {
+                        throw new Error("Missing video element");
+                    }
+
+                    videoEl.srcObject = videoStream;
+                    videoEl.muted = true;
+                    try {
+                        await videoEl.play();
+                    } catch (e) {
+                        console.error("Camera video play failed:", e);
+                    }
+
+                    // Wait until the stream is producing frames.
+                    const ready = await new Promise(resolve => {
+                        const startedAt = Date.now();
+                        const maxWaitMs = 5000;
+
+                        const check = () => {
+                            const hasDimensions = videoEl && videoEl.videoWidth > 0 && videoEl.videoHeight > 0;
+                            if (hasDimensions) return resolve(true);
+                            if (Date.now() - startedAt >= maxWaitMs) return resolve(false);
+                            setTimeout(check, 100);
+                        };
+
+                        check();
+                    });
+
+                    if (!ready) {
+                        throw new Error("Video stream not ready (no frames).");
+                    }
+
+                    cameraActive = true;
+                    const btn = document.getElementById('retryCameraBtn');
+                    if (btn) btn.style.display = 'none';
+                    return true;
+                } catch (e) {
+                    console.error("Camera getUserMedia failed:", e);
+                    setCameraError(e && e.message ? e.message : e);
+                    cameraActive = false;
+                    cameraStartPromise = null;
+                    stopSessionCamera();
+                    return false;
+                }
+            })();
+
+            return cameraStartPromise;
+        }
+
+        async function retryCamera() {
+            const btn = document.getElementById('retryCameraBtn');
+            if (btn) btn.style.display = 'none';
+
+            // Ensure a clean restart (prevents "device busy" / cached failed promise issues).
+            stopSessionCamera();
+
+            // If we are mid-question, ensure we start capturing only after camera succeeds.
+            const cameraOk = await startCamera();
+            if (!cameraOk) {
+                setCameraError("Camera retry failed.");
+                return;
+            }
+
+            if (frameInterval) clearInterval(frameInterval);
+            frameInterval = setInterval(captureFrame, FRAME_INTERVAL);
+            resetEmotionUI();
+            const currentQuestionTime = INDIVIDUAL_TIMES[currentIndex] || DEFAULT_SECONDS_PER_QUESTION;
+            startAnswerTimer(currentQuestionTime);
+        }
+
+        function stopSessionCamera() {
+            if (!videoStream) return;
+            try {
+                videoStream.getTracks().forEach(t => t.stop());
+            } catch (e) {}
+            videoStream = null;
+            cameraActive = false;
+            cameraStartPromise = null;
+        }
+
+        /* ==============================
+           SEND FRAMES
+        ============================== */
+        function captureFrame() {
+            if (isPaused) return;
+            if (framesCaptured >= MAX_FRAMES) return;
+            if (!videoEl || !videoEl.videoWidth) return;
+
+            const canvas = document.createElement("canvas");
+            canvas.width = videoEl.videoWidth;
+            canvas.height = videoEl.videoHeight;
+            canvas.getContext("2d").drawImage(videoEl, 0, 0);
+
+            fetch("/collect_fst", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    type: "frame",
+                    question_index: currentIndex,
+                    frame: canvas.toDataURL("image/jpeg"),
+                    realtime_emotion: true
+                })
+            })
+                .then(resp => {
+                    if (!resp.ok) {
+                        console.error("Frame capture response error:", resp.status, resp.statusText);
+                        throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
+                    }
+                    return resp.json();
+                })
+                .then(data => {
+                    console.log("Frame capture response:", data);
+                    if (data && data.emotionVisual) {
+                        console.log("Updating emotion UI with:", data.emotionVisual);
+                        lastVisualPrediction = data.emotionVisual.prediction;
+                        lastVisualConfidence = data.emotionVisual.confidence;
+                        updateEmotionUIFromState();
+                    } else {
+                        console.log("No emotion visual data received:", data);
+                    }
+                })
+                .catch(error => {
+                    console.error("Frame capture error:", error);
+                });
+            framesCaptured++;
+        }
+
+        /* ==============================
+           SEND AUDIO + TEXT (WAV)
+        ============================== */
+        function sendAudioAndText() {
+            const sampleRate = audioContext ? audioContext.sampleRate : 16000;
+
+            let samples = null;
+            if (audioChunks && audioChunks.length > 0) {
+                samples = flattenAudio(audioChunks);
+            }
+            // Fallback: if audio capture failed, send a short silent WAV so the backend
+            // can still persist `transcript.txt` and avoid crashing on missing audio_file.
+            if (!samples || samples.length === 0) {
+                samples = new Float32Array(Math.floor(sampleRate * 0.1)); // 100ms silence
+            }
+
+            const wavBlob = encodeWAV(samples, sampleRate);
+
+            const fd = new FormData();
+            fd.append("type", "audio_text");
+            fd.append("question_index", currentIndex);
+            fd.append("transcript", transcriptText.trim());
+            fd.append("audio_file", wavBlob, "answer.wav");
+
+            fetch("/collect_fst", {
+                method: "POST",
+                headers: {
+
+                },
+                body: fd
+            });
+        }
+
+        /* ==============================
+           WAV UTILITIES
+        ============================== */
+        function flattenAudio(chunks) {
+            const length = chunks.reduce((a, b) => a + b.length, 0);
+            const result = new Float32Array(length);
+            let offset = 0;
+
+            chunks.forEach(chunk => {
+                result.set(chunk, offset);
+                offset += chunk.length;
+            });
+            return result;
+        }
+
+        function encodeWAV(samples, sampleRate) {
+            const buffer = new ArrayBuffer(44 + samples.length * 2);
+            const view = new DataView(buffer);
+
+            write(view, 0, "RIFF");
+            view.setUint32(4, 36 + samples.length * 2, true);
+            write(view, 8, "WAVE");
+            write(view, 12, "fmt ");
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, 1, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true);
+            view.setUint16(32, 2, true);
+            view.setUint16(34, 16, true);
+            write(view, 36, "data");
+            view.setUint32(40, samples.length * 2, true);
+
+            let offset = 44;
+            for (let i = 0; i < samples.length; i++, offset += 2) {
+                let s = Math.max(-1, Math.min(1, samples[i]));
+                view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+            }
+            return new Blob([buffer], { type: "audio/wav" });
+        }
+
+        function write(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            const btn = document.getElementById("pauseBtn");
+            if (isPaused) {
+                btn.innerText = "Resume";
+                btn.style.backgroundColor = "#86efac"; // Light green
+            } else {
+                btn.innerText = "Pause";
+                btn.style.backgroundColor = "#fca5a5"; // Light red
+            }
+        }
+    </script>
+
+</body>
+
+</html>

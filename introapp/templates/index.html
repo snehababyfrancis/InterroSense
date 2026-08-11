@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Assisted Interrogation System | FBI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Font Awesome fallback icons */
+        .fas::before { content: "•"; }
+        .fa-shield-alt::before { content: "🛡️"; }
+        .fa-home::before { content: "🏠"; }
+        .fa-file-alt::before { content: "📄"; }
+        .fa-user-shield::before { content: "👮"; }
+        .fa-arrow-left::before { content: "←"; }
+        .fa-crime-scene::before { content: "🔍"; }
+        .fa-edit::before { content: "✏️"; }
+        .fa-id-badge::before { content: "🆔"; }
+        .fa-list-ol::before { content: "🔢"; }
+        .fa-cogs::before { content: "⚙️"; }
+        .fa-list-check::before { content: "✅"; }
+        .fa-trash::before { content: "🗑️"; }
+        .fa-play::before { content: "▶️"; }
+        .fa-times::before { content: "✖️"; }
+        .fa-spinner::before { content: "⏳"; }
+        .fa-info-circle::before { content: "ℹ️"; }
+        .fa-play-circle::before { content: "▶️"; }
+        .fa-exclamation-triangle::before { content: "⚠️"; }
+        .fa-server::before { content: "🖥️"; }
+        .fa-brain::before { content: "🧠"; }
+        .fa-eye::before { content: "👁️"; }
+        .fa-chart-line::before { content: "📊"; }
+        .fa-database::before { content: "💾"; }
+        .fa-stopwatch::before { content: "⏱️"; }
+        .fa-microphone::before { content: "🎤"; }
+        .fa-video::before { content: "📹"; }
+        .fa-camera::before { content: "📷"; }
+        .fa-pause-circle::before { content: "⏸️"; }
+        .fa-stop-circle::before { content: "⏹️"; }
+        .fa-redo::before { content: "🔄"; }
+        .fa-check-circle::before { content: "✅"; }
+        .fa-search::before { content: "🔍"; }
+        .fa-hashtag::before { content: "#️⃣"; }
+        .fa-user::before { content: "👤"; }
+        .fa-calendar-alt::before { content: "📅"; }
+        .fa-volume-up::before { content: "🔊"; }
+        .fa-language::before { content: "🌐"; }
+        .fa-gavel::before { content: "⚖️"; }
+        .fa-file-code::before { content: "📄"; }
+        .fa-download::before { content: "⬇️"; }
+        .fa-folder-open::before { content: "📂"; }
+        .fa-angle-double-left::before { content: "⏮️"; }
+        .fa-angle-left::before { content: "◀️"; }
+        .fa-angle-right::before { content: "▶️"; }
+        .fa-angle-double-right::before { content: "⏭️"; }
+        .fa-robot::before { content: "🤖"; }
+        .fa-balance-scale::before { content: "⚖️"; }
+        .fa-stop::before { content: "⏹️"; }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0a0a14;
+            color: #e0e0e0;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(28, 58, 173, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(139, 0, 0, 0.1) 0%, transparent 20%);
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: rgba(10, 10, 20, 0.95);
+            border-bottom: 2px solid #1e3a8a;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            color: #dc2626;
+            font-size: 28px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, #dc2626, #1e40af);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            background-color: rgba(30, 58, 138, 0.3);
+        }
+
+        .nav-links a.active {
+            color: #ffffff;
+            background-color: rgba(220, 38, 38, 0.2);
+            border-left: 3px solid #dc2626;
+        }
+
+        .nav-links a i {
+            margin-right: 8px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 20px;
+            border-bottom: 1px solid rgba(30, 58, 138, 0.5);
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #dc2626, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 18px;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Buttons Section */
+        .selection-section {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .role-btn {
+            width: 300px;
+            height: 400px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            border: none;
+        }
+
+        .role-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: -1;
+        }
+
+        .role-btn:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        .police-btn {
+            background: url('https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80') center/cover no-repeat;
+            border: 3px solid #1e40af;
+        }
+
+        .accused-btn {
+            background: url('https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80') center/cover no-repeat;
+            border: 3px solid #dc2626;
+        }
+
+        .btn-icon {
+            font-size: 70px;
+            margin-bottom: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 3px solid;
+        }
+
+        .police-btn .btn-icon {
+            color: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .accused-btn .btn-icon {
+            color: #ef4444;
+            border-color: #ef4444;
+        }
+
+        .btn-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .police-btn .btn-title {
+            color: #60a5fa;
+        }
+
+        .accused-btn .btn-title {
+            color: #f87171;
+        }
+
+        .btn-desc {
+            font-size: 16px;
+            text-align: center;
+            padding: 0 20px;
+            color: #d1d5db;
+            margin-top: 10px;
+        }
+
+        .role-btn:hover .btn-icon {
+            transform: rotate(10deg) scale(1.1);
+            transition: transform 0.4s;
+        }
+
+        /* System Info */
+        .system-info {
+            margin-top: 70px;
+            background-color: rgba(15, 23, 42, 0.7);
+            border-radius: 12px;
+            padding: 30px;
+            border-left: 5px solid #dc2626;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .system-info h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #60a5fa;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .system-info h2 i {
+            color: #dc2626;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .feature {
+            background-color: rgba(30, 41, 59, 0.5);
+            padding: 20px;
+            border-radius: 8px;
+            border-top: 3px solid #3b82f6;
+        }
+
+        .feature h3 {
+            color: #fbbf24;
+            margin-bottom: 10px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature p {
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(30, 58, 138, 0.5);
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .warning {
+            color: #f87171;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 20px;
+                padding: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            .selection-section {
+                gap: 30px;
+            }
+            
+            .role-btn {
+                width: 280px;
+                height: 350px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .role-btn {
+                width: 100%;
+                max-width: 300px;
+                height: 300px;
+            }
+            
+            .btn-icon {
+                font-size: 50px;
+                width: 100px;
+                height: 100px;
+            }
+            
+            .btn-title {
+                font-size: 26px;
+            }
+        }
+
+        /* Animation for page load */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container, .navbar {
+            animation: fadeIn 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <span class="logo-text">AI INTERROGATION SYSTEM</span>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'index' %}" class="active"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="{% url 'reports' %}"><i class="fas fa-file-alt"></i> Reports</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-robot"></i> AI-Assisted Interrogation System</h1>
+            <p>Integrating Qwen1.5-1.8B-Chat LLM with real-time micro-expression, gaze, and head pose analysis to enhance accuracy and consistency in suspect evaluation. Reducing human bias and operational fatigue through adaptive, scenario-driven interrogation.</p>
+        </div>
+
+        <!-- Selection Buttons -->
+        <div class="selection-section">
+            <button class="role-btn police-btn" onclick="selectRole('police')">
+                <div class="btn-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="btn-title">Police Officer</div>
+                <div class="btn-desc">Access interrogation interface with AI assistance, real-time deception analysis, and suspect evaluation tools.</div>
+            </button>
+
+            <button class="role-btn accused-btn" onclick="selectRole('accused')">
+                <div class="btn-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="btn-title">Accused</div>
+                <div class="btn-desc">Enter interrogation interface. Your verbal and non-verbal responses will be analyzed in real-time.</div>
+            </button>
+        </div>
+
+        <!-- System Information -->
+        <div class="system-info">
+            <h2><i class="fas fa-cogs"></i> System Capabilities</h2>
+            <p>The AI-Assisted Interrogation System integrates multimodal evidence analysis to provide law enforcement with scalable, adaptive, and transparent interrogation support.</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <h3><i class="fas fa-brain"></i> LLM Integration</h3>
+                    <p>Fine-tuned Qwen1.5-1.8B-Chat model conducts adaptive, chat-based interrogations, modifying questioning strategy based on suspect responses.</p>
+                </div>
+                <div class="feature">
+                    <h3><i class="fas fa-eye"></i> Visual Analysis</h3>
+                    <p>Real-time micro-expression, gaze, and head pose detection through computer vision models to identify non-verbal deception indicators.</p>
+                </div>
+                <div class="feature">
+                    <h3><i class="fas fa-chart-line"></i> Deception Probability</h3>
+                    <p>Fuses multimodal evidence to produce real-time deception probability scores with interpretable explanations for the officer.</p>
+                </div>
+                <div class="feature">
+                    <h3><i class="fas fa-balance-scale"></i> Bias Reduction</h3>
+                    <p>Trained on deception dataset and custom scenario-rich corpus to reduce human bias and operational fatigue in interrogations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2023 Federal Bureau of Investigation - AI-Assisted Interrogation System</p>
+        <p class="warning"><i class="fas fa-exclamation-triangle"></i> This system is for authorized law enforcement use only. All interactions are logged and monitored.</p>
+    </div>
+
+    <script>
+        function selectRole(role) {
+            // Add visual feedback for selection
+            const policeBtn = document.querySelector('.police-btn');
+            const accusedBtn = document.querySelector('.accused-btn');
+            
+            // Reset any previous selections
+            policeBtn.style.boxShadow = '';
+            accusedBtn.style.boxShadow = '';
+            
+            // Highlight selected button
+            if (role === 'police') {
+                policeBtn.style.boxShadow = '0 0 30px rgba(59, 130, 246, 0.8)';
+                
+                // In a real application, this would redirect to police interface
+
+                fetch("{% url 'police' %}")
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Network response was not ok.');
+                        }
+                    })
+                    .then(html => {
+                        document.open();
+                        document.write(html);
+                        document.close();
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+                
+                // Simulate navigation
+                setTimeout(() => {
+                    window.location.href = "#"; // In real app, this would be police-interface.html
+                }, 500);
+                
+            } else if (role === 'accused') {
+                accusedBtn.style.boxShadow = '0 0 30px rgba(220, 38, 38, 0.8)';
+                
+                // In a real application, this would redirect to accused interface
+                fetch("{% url 'accused' %}")
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            throw new Error('Network response was not ok.');
+                        }
+                    })
+                    .then(html => {
+                        document.open();
+                        document.write(html);
+                        document.close();
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+                // Simulate navigation
+                setTimeout(() => {
+                    window.location.href = "#"; // In real app, this would be accused-interface.html
+                }, 500);
+            }
+            
+            // Log the selection (in a real system, this would be sent to a server)
+            console.log(`Role selected: ${role} at ${new Date().toLocaleTimeString()}`);
+        }
+
+        // Add interactive effects to navigation
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Remove active class from all links
+                document.querySelectorAll('.nav-links a').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                
+            });
+        });
+
+        // Add subtle animation to buttons on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.role-btn');
+            buttons.forEach((btn, index) => {
+                btn.style.animationDelay = `${index * 0.2}s`;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interrogation Reports | FBI AI System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0a0a14;
+            color: #e0e0e0;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(28, 58, 173, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(139, 0, 0, 0.1) 0%, transparent 20%);
+            padding-bottom: 40px;
+        }
+
+        /* Navigation Bar - Consistent with index.html */
+        .navbar {
+            background-color: rgba(10, 10, 20, 0.95);
+            border-bottom: 2px solid #1e3a8a;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            color: #dc2626;
+            font-size: 28px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, #dc2626, #1e40af);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            background-color: rgba(30, 58, 138, 0.3);
+        }
+
+        .nav-links a.active {
+            color: #ffffff;
+            background-color: rgba(220, 38, 38, 0.2);
+            border-left: 3px solid #dc2626;
+        }
+
+        .nav-links a i {
+            margin-right: 8px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 30px;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 12px;
+            border-left: 5px solid #1e40af;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #3b82f6, #dc2626);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .page-header p {
+            color: #94a3b8;
+            font-size: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Filters and Search */
+        .report-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 10px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 1px solid #374151;
+            background-color: #111827;
+            color: #e5e7eb;
+            font-size: 15px;
+        }
+
+        .search-box button {
+            padding: 12px 20px;
+            background: #1e40af;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+
+        .search-box button:hover {
+            background: #1e3a8a;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid #374151;
+            background-color: #111827;
+            color: #e5e7eb;
+            min-width: 150px;
+        }
+
+        /* Reports Table */
+        .reports-table-container {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 40px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .reports-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        .reports-table thead {
+            background: linear-gradient(to right, #1e3a8a, #3730a3);
+            color: white;
+        }
+
+        .reports-table th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 14px;
+            border-bottom: 2px solid #4f46e5;
+        }
+
+        .reports-table th i {
+            margin-right: 8px;
+        }
+
+        .reports-table tbody tr {
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+            transition: background 0.3s;
+        }
+
+        .reports-table tbody tr:hover {
+            background: rgba(30, 41, 59, 0.5);
+        }
+
+        .reports-table td {
+            padding: 16px 15px;
+            vertical-align: top;
+            color: #d1d5db;
+        }
+
+        /* Status badges */
+        .verdict-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .verdict-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .verdict-badge:hover::before {
+            left: 100%;
+        }
+
+        .verdict-truthful {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: 2px solid #10b981;
+        }
+
+        .verdict-truthful:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .verdict-deceptive {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            border: 2px solid #ef4444;
+        }
+
+        .verdict-deceptive:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .verdict-inconclusive {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: 2px solid #f59e0b;
+        }
+
+        .verdict-inconclusive:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Analysis result cells */
+        .analysis-cell {
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analysis-cell::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .analysis-cell:hover::before {
+            opacity: 1;
+        }
+
+        .analysis-truth {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1));
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .analysis-truth:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(5, 150, 105, 0.2));
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .analysis-lie {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .analysis-lie:hover {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.2));
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .analysis-no-data {
+            background: linear-gradient(135deg, rgba(107, 114, 128, 0.15), rgba(75, 85, 99, 0.1));
+            color: #6b7280;
+            border: 1px solid rgba(107, 114, 128, 0.3);
+            font-style: italic;
+        }
+
+        .analysis-no-data:hover {
+            background: linear-gradient(135deg, rgba(107, 114, 128, 0.25), rgba(75, 85, 99, 0.2));
+            transform: scale(1.02);
+        }
+
+        .analysis-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(185, 28, 28, 0.1));
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            font-weight: 700;
+        }
+
+        .analysis-error:hover {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(185, 28, 28, 0.2));
+            animation: pulse 2s infinite;
+        }
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* JSON data display */
+.json-box {
+    background: #1a1a2e;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #30304a;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #e0e0e0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease-in-out;
+}
+
+.json-box:hover {
+    border-color: #4a4a6a;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.json-box pre {
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* Specific styling for keys and values within JSON */
+.json-box .json-key {
+    color: #88ccff;
+    font-weight: 600;
+}
+
+.json-box .json-string {
+    color: #a8ffb8;
+}
+
+.json-box .json-number {
+    color: #ffcc88;
+}
+
+.json-box .json-boolean {
+    color: #ff88cc;
+}
+
+.json-box .json-null {
+    color: #cccccc;
+}
+
+/* Export Report Button */
+.export-report-btn {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.export-report-btn:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.export-report-btn:active {
+    transform: translateY(0);
+}
+
+/* View Report Button */
+.view-report-btn {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    margin-right: 8px;
+}
+
+.view-report-btn:hover {
+    background: linear-gradient(135deg, #1e40af, #1e3a8a);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.view-report-btn:active {
+    transform: translateY(0);
+}
+
+/* Modal Styles */
+.report-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.report-modal-content {
+    background: #1a1a2e;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid #30304a;
+    overflow: hidden;
+}
+
+.report-modal-header {
+    background: linear-gradient(135deg, #1e3a8a, #3730a3);
+    color: white;
+    padding: 20px 25px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #4f46e5;
+}
+
+.report-modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.report-modal-close {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.report-modal-close:hover {
+    background: rgba(239, 68, 68, 0.3);
+    transform: rotate(90deg);
+}
+
+.report-modal-body {
+    padding: 25px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.report-modal-body .json-box {
+    margin: 0;
+    background: #0f172a;
+    border: 1px solid #374151;
+    color: #e2e8f0;
+}
+
+.report-modal-body .json-box:hover {
+    border-color: #4b5563;
+}
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .pagination a, .pagination span {
+            padding: 10px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .pagination a {
+            background-color: rgba(30, 41, 59, 0.7);
+            color: #cbd5e1;
+            border: 1px solid #374151;
+        }
+
+        .pagination a:hover {
+            background-color: #1e40af;
+            color: white;
+            border-color: #1e40af;
+        }
+
+        .pagination span.current {
+            background: linear-gradient(to right, #1e40af, #dc2626);
+            color: white;
+        }
+
+        .pagination a.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #4b5563;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #d1d5db;
+        }
+
+        /* Modal overlay for expanded JSON */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 999;
+            display: none;
+        }
+
+        /* Statistics Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-top: 4px solid;
+        }
+
+        .stat-card.total {
+            border-color: #3b82f6;
+        }
+
+        .stat-card.truthful {
+            border-color: #10b981;
+        }
+
+        .stat-card.deceptive {
+            border-color: #ef4444;
+        }
+
+        .stat-card.inconclusive {
+            border-color: #f59e0b;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.total {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .stat-icon.truthful {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .stat-icon.deceptive {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .stat-icon.inconclusive {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .stat-info h3 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .stat-info p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        /* Report ID Link */
+.report-id-link {
+    color: #3b82f6;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-bottom: 1px dotted #3b82f6;
+}
+
+.report-id-link:hover {
+    color: #60a5fa;
+    border-bottom-style: solid;
+    text-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
+/* Scenario Modal */
+.scenario-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.scenario-modal-content {
+    background: linear-gradient(135deg, #1a1a2e, #0f172a);
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid #30304a;
+    overflow: hidden;
+}
+
+.scenario-modal-header {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: white;
+    padding: 20px 25px;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ef4444;
+}
+
+.scenario-modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.scenario-modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.scenario-modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.scenario-modal-body {
+    padding: 25px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.scenario-section {
+    margin-bottom: 25px;
+}
+
+.scenario-section h3 {
+    color: #dc2626;
+    font-size: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.scenario-content {
+    background: rgba(15, 23, 42, 0.6);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #dc2626;
+    color: #e0e0e0;
+    line-height: 1.6;
+    font-style: italic;
+}
+
+.questions-list {
+    list-style: none;
+    padding: 0;
+}
+
+.question-item {
+    background: rgba(30, 41, 59, 0.6);
+    margin-bottom: 12px;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.question-item:hover {
+    background: rgba(30, 41, 59, 0.8);
+    transform: translateX(5px);
+}
+
+.question-number {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
+
+.question-text {
+    margin-left: 40px;
+    color: #e0e0e0;
+    line-height: 1.5;
+}
+
+.no-data-message {
+    text-align: center;
+    color: #94a3b8;
+    font-style: italic;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 8px;
+}
+
+        /* Responsive Design */
+        @media (max-width: 1100px) {
+            .reports-table th:nth-child(7),
+            .reports-table td:nth-child(7) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .reports-table th:nth-child(4),
+            .reports-table td:nth-child(4) {
+                display: none;
+            }
+            
+            .report-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 20px;
+                padding: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .reports-table th:nth-child(3),
+            .reports-table td:nth-child(3) {
+                display: none;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <span class="logo-text">AI INTERROGATION SYSTEM</span>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'index' %}"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="{% url 'reports' %}" class="active"><i class="fas fa-file-alt"></i> Reports</a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-file-alt"></i> Interrogation Reports</h1>
+            <p>View and analyze all interrogation sessions conducted through the AI-assisted system. Filter, search, and export detailed reports for further investigation.</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-container">
+            <div class="stat-card total">
+                <div class="stat-icon total">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ page_obj.paginator.count }}</h3>
+                    <p>Total Reports</p>
+                </div>
+            </div>
+            
+            <div class="stat-card truthful">
+                <div class="stat-icon truthful">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ truthful_count }}</h3>
+                    <p>Truthful Verdicts</p>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Controls: Search and Filters -->
+        <div class="report-controls">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Search by Accused ID, Verdict, or Date...">
+                <button id="search-btn"><i class="fas fa-search"></i> Search</button>
+            </div>
+            
+
+        </div>
+
+        <!-- Reports Table -->
+        <div class="reports-table-container">
+            <div class="table-responsive">
+                <table class="reports-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag"></i> ID</th>
+                            <th><i class="fas fa-user"></i> Accused ID</th>
+                            <th><i class="fas fa-calendar-alt"></i> Timestamp</th>
+                            <th><i class="fas fa-video"></i> Video Analysis</th>
+                            <th><i class="fas fa-volume-up"></i> Audio Analysis</th>
+                            <th><i class="fas fa-language"></i> Text Analysis</th>
+                            <th><i class="fas fa-gavel"></i> Final Result</th>
+                            <th><i class="fas fa-file-code"></i> Detailed Report</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report in page_obj %}
+                        <tr>
+                            <td><strong><a href="#" class="report-id-link" data-report-id="{{ report.id }}" data-scenario="{{ report.scenario|default:''|escapejs }}" data-questions="{{ report.questions|default:'[]'|escapejs }}" onclick="showScenarioModal(this)">#{{ report.id }}</a></strong></td>
+                            <td>{{ report.accused_id }}</td>
+                            <td>{{ report.timestamp|date:"M d, Y H:i" }}</td>
+                            <td>
+                                <div class="analysis-cell {% if 'LIE' in report.video_prediction %}analysis-lie{% elif 'TRUTH' in report.video_prediction %}analysis-truth{% elif 'NO_DATA' in report.video_prediction %}analysis-no-data{% else %}analysis-error{% endif %}">
+                                    {% if 'LIE' in report.video_prediction %}<i class="fas fa-exclamation-triangle"></i> {% endif %}{{ report.video_prediction|truncatechars:25 }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="analysis-cell {% if 'LIE' in report.audio_prediction %}analysis-lie{% elif 'TRUTH' in report.audio_prediction %}analysis-truth{% elif 'NO_DATA' in report.audio_prediction %}analysis-no-data{% else %}analysis-error{% endif %}">
+                                    {% if 'LIE' in report.audio_prediction %}<i class="fas fa-exclamation-triangle"></i> {% endif %}{{ report.audio_prediction|truncatechars:25 }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="analysis-cell {% if 'LIE' in report.linguistic_analysis %}analysis-lie{% elif 'TRUTH' in report.linguistic_analysis %}analysis-truth{% elif 'NO_DATA' in report.linguistic_analysis %}analysis-no-data{% else %}analysis-error{% endif %}">
+                                    {% if 'LIE' in report.linguistic_analysis %}<i class="fas fa-exclamation-triangle"></i> {% endif %}{{ report.linguistic_analysis|truncatechars:25 }}
+                                </div>
+                            </td>
+                            <td>
+                                {% if report.final_result.result == "CRIMINAL" %}
+                                    <span class="verdict-badge verdict-deceptive">
+                                        <i class="fas fa-gavel"></i> CRIMINAL ({{ report.final_result.percentage }}%)
+                                    </span>
+                                {% else %}
+                                    <span class="verdict-badge verdict-truthful">
+                                        <i class="fas fa-shield-alt"></i> NOT CRIMINAL ({{ report.final_result.percentage }}%)
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <button class="view-report-btn" onclick="showReportModal({{ report.id }})" data-report-id="{{ report.id }}">
+                                    <i class="fas fa-eye"></i> View Report
+                                </button>
+                                <button class="export-report-btn" onclick="exportReport({{ report.id }})">
+                                    <i class="fas fa-download"></i> Export Report
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Hidden data container for reports - One script tag per report -->
+        {% for report in page_obj %}
+        <script id="report-data-{{ report.id }}" type="application/json">
+        {{ report.detailed_report|safe }}
+        </script>
+        {% endfor %}
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                <a href="?page={{ page_obj.previous_page_number }}"><i class="fas fa-angle-left"></i> Previous</a>
+            {% else %}
+                <span class="disabled"><i class="fas fa-angle-double-left"></i></span>
+                <span class="disabled"><i class="fas fa-angle-left"></i> Previous</span>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="current">{{ num }}</span>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next <i class="fas fa-angle-right"></i></a>
+                <a href="?page={{ page_obj.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+            {% else %}
+                <span class="disabled">Next <i class="fas fa-angle-right"></i></span>
+                <span class="disabled"><i class="fas fa-angle-double-right"></i></span>
+            {% endif %}
+        </div>
+        {% endif %}
+        </div>
+
+        <!-- Modal for Report View -->
+        <div class="report-modal" id="report-modal">
+            <div class="report-modal-content">
+                <div class="report-modal-header">
+                    <div class="report-modal-title">
+                        <i class="fas fa-file-code"></i>
+                        Detailed Report #<span id="modal-report-id"></span>
+                    </div>
+                    <div class="report-modal-close" onclick="closeReportModal()">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="report-modal-body">
+                    <div class="json-box" id="modal-json-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for Scenario and Questions -->
+        <div class="scenario-modal" id="scenario-modal">
+            <div class="scenario-modal-content">
+                <div class="scenario-modal-header">
+                    <div class="scenario-modal-title">
+                        <i class="fas fa-theater-masks"></i>
+                        Scenario & Questions - Report #<span id="scenario-report-id"></span>
+                    </div>
+                    <div class="scenario-modal-close" onclick="closeScenarioModal()">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="scenario-modal-body">
+                    <div class="scenario-section">
+                        <h3><i class="fas fa-book-open"></i> Scenario</h3>
+                        <div class="scenario-content" id="scenario-content">
+                            Loading scenario...
+                        </div>
+                    </div>
+                    
+                    <div class="scenario-section">
+                        <h3><i class="fas fa-question-circle"></i> Interrogation Questions</h3>
+                        <ul class="questions-list" id="questions-list">
+                            Loading questions...
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Overlay for JSON View -->
+        <div class="modal-overlay" id="json-modal" onclick="closeModal()"></div>
+
+        <script>
+            // Show Report Modal
+            function showReportModal(reportId) {
+                document.getElementById('modal-report-id').textContent = reportId;
+                
+                // Get report data from its own script tag
+                const scriptTag = document.getElementById('report-data-' + reportId);
+                let jsonData = null;
+                
+                if (!scriptTag) {
+                    console.error('Could not find report data script tag for report', reportId);
+                    document.getElementById('modal-json-content').textContent = 
+                        'Could not find report data for ID: ' + reportId;
+                    document.getElementById('report-modal').style.display = 'block';
+                    return;
+                }
+                
+                try {
+                    let reportData = scriptTag.textContent.trim();
+                    console.log('Got reportData from script tag');
+                    console.log('Raw reportData length:', reportData.length);
+                    console.log('Raw reportData first 100 chars:', reportData.substring(0, 100));
+                    
+                    // Try direct parsing first
+                    try {
+                        jsonData = JSON.parse(reportData);
+                        console.log('✓ Direct JSON parsing successful');
+                    } catch (e1) {
+                        console.log('✗ Direct parsing failed, attempting Python dict conversion...');
+                        
+                        // Convert Python dict syntax to JSON syntax
+                        // Replace single quotes with double quotes, but be careful with contractions
+                        let converted = reportData
+                            .replace(/'/g, '"')  // Replace all single quotes with double quotes
+                            .replace(/True/g, 'true')  // Python boolean
+                            .replace(/False/g, 'false')  // Python boolean
+                            .replace(/None/g, 'null');  // Python None
+                        
+                        console.log('Converted data first 100 chars:', converted.substring(0, 100));
+                        
+                        jsonData = JSON.parse(converted);
+                        console.log('✓ Python dict conversion successful');
+                    }
+                    
+                    console.log('✓ Successfully parsed JSON');
+                    console.log('JSON keys:', Object.keys(jsonData));
+                    
+                    const plainText = formatReportAsPlainText(jsonData);
+                    console.log('Formatted plainText length:', plainText.length);
+                    
+                    document.getElementById('modal-json-content').textContent = plainText;
+                } catch (e) {
+                    console.error('❌ Error parsing report:', e);
+                    console.error('Stack:', e.stack);
+                    console.log('Problem data:', scriptTag.textContent.substring(0, 300));
+                    document.getElementById('modal-json-content').textContent = 
+                        'Error parsing report data.\n\nDebug Info:\n' + e.message + 
+                        '\n\nProblem area (first 300 chars):\n' + scriptTag.textContent.substring(0, 300) +
+                        '\n\nPlease check browser console for details.';
+                }
+                
+                document.getElementById('report-modal').style.display = 'block';
+            }
+
+            // Format report JSON as human-readable plain text (completely remove JSON structure)
+            function formatReportAsPlainText(reportData) {
+                let plainText = "";
+                plainText += "INTERROGATION REPORT - DETAILED RESULTS\n";
+                plainText += "=".repeat(60) + "\n";
+                plainText += "\n";
+                
+                if (!reportData || typeof reportData !== 'object') {
+                    return "Invalid report data format.\n";
+                }
+                
+                // Iterate through each question and extract data
+                let questionCount = 0;
+                const keys = Object.keys(reportData).sort((a, b) => {
+                    // Extract numbers from keys like "question_1", "question_2"
+                    const numA = parseInt(String(a).match(/\d+/)?.[0] || 0);
+                    const numB = parseInt(String(b).match(/\d+/)?.[0] || 0);
+                    return numA - numB;
+                });
+                
+                console.log('Processing keys:', keys);
+                
+                for (const key of keys) {
+                    try {
+                        if (key.toLowerCase().includes('question')) {
+                            const question = reportData[key];
+                            
+                            if (!question || typeof question !== 'object') {
+                                continue;
+                            }
+                            
+                            // Extract and clean the values - remove ALL JSON characters
+                            const cleanValue = (value) => {
+                                if (value === null || value === undefined) return 'N/A';
+                                let cleaned = String(value)
+                                    .replace(/[{}[\]"']/g, '')       // Remove braces, brackets, quotes
+                                    .replace(/\\+/g, '')              // Remove backslashes
+                                    .replace(/\s+/g, ' ')             // Normalize whitespace
+                                    .trim();
+                                return cleaned || 'N/A';
+                            };
+                            
+                            const video = cleanValue(question.video);
+                            const audio = cleanValue(question.audio);
+                            const text = cleanValue(question.text);
+                            const questionNum = String(key).match(/\d+/)?.[0] || (questionCount + 1);
+                            
+                            plainText += "Question " + questionNum + "\n";
+                            plainText += "─".repeat(60) + "\n";
+                            plainText += "  Video Analysis: " + video + "\n";
+                            plainText += "  Audio Analysis: " + audio + "\n";
+                            plainText += "  Text Analysis:  " + text + "\n";
+                            plainText += "\n";
+                            
+                            questionCount++;
+                        }
+                    } catch (itemErr) {
+                        console.error('Error processing question', key, ':', itemErr);
+                    }
+                }
+                
+                if (questionCount === 0) {
+                    plainText += "No question data available.\n";
+                    plainText += "Report keys found: " + keys.join(", ") + "\n";
+                }
+                
+                plainText += "=".repeat(60) + "\n";
+                plainText += "End of Report\n";
+                
+                return plainText;
+            }
+
+            // Close Report Modal
+            function closeReportModal() {
+                document.getElementById('report-modal').style.display = 'none';
+            }
+
+            // Export report
+            function exportReport(reportId) {
+                try {
+                    // Get report info from table
+                    const reportRow = document.querySelector(`button[onclick="exportReport(${reportId})"]`).closest('tr');
+                    const cells = reportRow.getElementsByTagName('td');
+                    
+                    const reportInfo = {
+                        id: cells[0].textContent.trim(),
+                        accusedId: cells[1].textContent.trim(),
+                        timestamp: cells[2].textContent.trim(),
+                        videoAnalysis: cells[3].textContent.trim(),
+                        audioAnalysis: cells[4].textContent.trim(),
+                        textAnalysis: cells[5].textContent.trim(),
+                        finalResult: cells[6].textContent.trim()
+                    };
+                    
+                    // Get detailed report data from script tag
+                    const scriptTag = document.getElementById('report-data-' + reportId);
+                    let detailedData = null;
+                    
+                    if (scriptTag) {
+                        let reportData = scriptTag.textContent.trim();
+                        
+                        // Try direct parsing first
+                        try {
+                            detailedData = JSON.parse(reportData);
+                        } catch (e) {
+                            // Convert Python dict syntax to JSON
+                            const converted = reportData
+                                .replace(/'/g, '"')
+                                .replace(/True/g, 'true')
+                                .replace(/False/g, 'false')
+                                .replace(/None/g, 'null');
+                            
+                            detailedData = JSON.parse(converted);
+                        }
+                    }
+                    
+                    generatePDFReport(reportInfo, detailedData);
+                } catch (e) {
+                    console.error('Error exporting report:', e);
+                    alert('Error exporting report: ' + e.message);
+                }
+            }
+            
+            // Generate professional structured PDF report for interrogation system
+            function generatePDFReport(reportInfo, detailedData) {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                
+                // Color scheme for interrogation system
+                const colors = {
+                    primary: { r: 12, g: 26, b: 76 },      // Dark blue
+                    accent: { r: 220, g: 38, b: 38 },      // Red for deception
+                    truth: { r: 16, g: 185, b: 129 },      // Green for truth
+                    warning: { r: 245, g: 158, b: 11 },    // Orange for warning
+                    text: { r: 0, g: 0, b: 0 },            // Black
+                    lightText: { r: 100, g: 100, b: 100 }  // Gray
+                };
+                
+                let yPos = 10;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const margin = 15;
+                
+                // Helper function to add page break with header
+                function addPageBreak() {
+                    doc.addPage();
+                    yPos = 15;
+                    addPageHeader();
+                }
+                
+                // Add professional header to each page
+                function addPageHeader() {
+                    doc.setDrawColor(colors.primary.r, colors.primary.g, colors.primary.b);
+                    doc.setLineWidth(0.5);
+                    doc.line(margin, yPos + 3, pageWidth - margin, yPos + 3);
+                    
+                    doc.setFontSize(8);
+                    doc.setTextColor(colors.lightText.r, colors.lightText.g, colors.lightText.b);
+                    doc.text('AI INTERROGATION SYSTEM - CONFIDENTIAL REPORT', margin, yPos + 8);
+                    doc.text(`Report #${reportInfo.id} | Accused: ${reportInfo.accusedId}`, pageWidth - margin, yPos + 8, { align: 'right' });
+                    
+                    yPos += 12;
+                }
+                
+                // Add footer with page numbers
+                function addPageFooter(currentPage, totalPages) {
+                    const footerY = pageHeight - 8;
+                    doc.setDrawColor(200, 200, 200);
+                    doc.line(margin, footerY - 5, pageWidth - margin, footerY - 5);
+                    
+                    doc.setFontSize(8);
+                    doc.setTextColor(colors.lightText.r, colors.lightText.g, colors.lightText.b);
+                    doc.text(`Page ${currentPage} of ${totalPages}`, margin, footerY);
+                    doc.text('Generated by AI Interrogation System', pageWidth - margin, footerY, { align: 'right' });
+                    doc.text(new Date().toLocaleString(), pageWidth / 2, footerY, { align: 'center' });
+                }
+                
+                // PAGE 1: COVER AND SUMMARY
+                
+                // Professional header with seal
+                doc.setFontSize(24);
+                doc.setTextColor(colors.primary.r, colors.primary.g, colors.primary.b);
+                doc.setFont(undefined, 'bold');
+                doc.text('INTERROGATION REPORT', pageWidth / 2, yPos + 15, { align: 'center' });
+                
+                yPos += 25;
+                
+                // Department info box
+                doc.setFillColor(colors.primary.r, colors.primary.g, colors.primary.b);
+                doc.rect(margin, yPos, pageWidth - 2*margin, 25, 'F');
+                
+                doc.setFontSize(11);
+                doc.setTextColor(255, 255, 255);
+                doc.setFont(undefined, 'bold');
+                doc.text('FEDERAL BUREAU OF INVESTIGATION', pageWidth / 2, yPos + 8, { align: 'center' });
+                doc.setFontSize(9);
+                doc.text('AI-Assisted Lie Detection & Analysis System', pageWidth / 2, yPos + 15, { align: 'center' });
+                doc.setFontSize(8);
+                doc.text('Classified - For Official Use Only', pageWidth / 2, yPos + 22, { align: 'center' });
+                
+                yPos += 35;
+                
+                // Report metadata
+                doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                doc.setFont(undefined, 'bold');
+                doc.setFontSize(10);
+                
+                const metadata = [
+                    { label: 'REPORT NUMBER:', value: String(reportInfo.id).replace('#', '') },
+                    { label: 'SUBJECT (ACCUSED):', value: reportInfo.accusedId },
+                    { label: 'INTERROGATION DATE:', value: reportInfo.timestamp },
+                    { label: 'REPORT GENERATED:', value: new Date().toLocaleString() }
+                ];
+                
+                metadata.forEach(item => {
+                    doc.setFont(undefined, 'bold');
+                    doc.setFontSize(9);
+                    doc.setTextColor(colors.primary.r, colors.primary.g, colors.primary.b);
+                    doc.text(item.label, margin, yPos);
+                    
+                    doc.setFont(undefined, 'normal');
+                    doc.setFontSize(9);
+                    doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                    const wrappedValue = doc.splitTextToSize(String(item.value), pageWidth - 2*margin - 50);
+                    doc.text(wrappedValue, 65, yPos);
+                    yPos += (wrappedValue.length > 1 ? wrappedValue.length * 4 + 2 : 8);
+                });
+                
+                yPos += 10;
+                
+                // FINAL VERDICT - Prominent box
+                const verdict = reportInfo.finalResult;
+                const isCriminal = verdict.includes('CRIMINAL') || verdict.includes('LIE');
+                const verdictColor = isCriminal ? colors.accent : colors.truth;
+                
+                doc.setFillColor(verdictColor.r, verdictColor.g, verdictColor.b);
+                doc.rect(margin, yPos, pageWidth - 2*margin, 20, 'F');
+                
+                doc.setFontSize(14);
+                doc.setTextColor(255, 255, 255);
+                doc.setFont(undefined, 'bold');
+                doc.text('FINAL VERDICT', margin + 5, yPos + 7);
+                doc.setFontSize(12);
+                doc.text(verdict, margin + 5, yPos + 15);
+                
+                yPos += 30;
+                
+                // Summary statistics
+                doc.setFontSize(10);
+                doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                doc.setFont(undefined, 'bold');
+                doc.text('ANALYSIS SUMMARY', margin, yPos);
+                
+                yPos += 8;
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(9);
+                
+                // Summary items with proper wrapping
+                const summaryLabels = [
+                    { label: 'Video Analysis:', value: reportInfo.videoAnalysis },
+                    { label: 'Audio Analysis:', value: reportInfo.audioAnalysis },
+                    { label: 'Linguistic Analysis:', value: reportInfo.textAnalysis }
+                ];
+                
+                summaryLabels.forEach(item => {
+                    doc.setFont(undefined, 'bold');
+                    doc.setFontSize(9);
+                    doc.setTextColor(colors.primary.r, colors.primary.g, colors.primary.b);
+                    doc.text(item.label, margin + 5, yPos);
+                    
+                    doc.setFont(undefined, 'normal');
+                    doc.setFontSize(8);
+                    doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                    const wrappedValue = doc.splitTextToSize(item.value || 'N/A', pageWidth - 2*margin - 30);
+                    doc.text(wrappedValue, margin + 35, yPos);
+                    yPos += (wrappedValue.length * 3) + 4;
+                });
+                
+                yPos += 3;
+                
+                // Detailed Analysis Results
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(colors.primary.r, colors.primary.g, colors.primary.b);
+                doc.text('DETAILED ANALYSIS RESULTS', margin, yPos);
+                
+                yPos += 8;
+                
+                // Video Analysis Detail
+                doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                doc.setFont(undefined, 'bold');
+                doc.setFontSize(9);
+                doc.text('[VIDEO ANALYSIS]', margin, yPos);
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(colors.lightText.r, colors.lightText.g, colors.lightText.b);
+                doc.text('Facial Expressions & Body Language', margin + 40, yPos);
+                
+                yPos += 6;
+                
+                doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                const videoAnalysisText = doc.splitTextToSize(reportInfo.videoAnalysis || 'No data available', pageWidth - 2*margin - 10);
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'normal');
+                doc.text(videoAnalysisText, margin + 5, yPos);
+                yPos += (videoAnalysisText.length * 4) + 5;
+                
+                // Audio Analysis Detail
+                doc.setFont(undefined, 'bold');
+                doc.setFontSize(9);
+                doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                doc.text('[AUDIO ANALYSIS]', margin, yPos);
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(colors.lightText.r, colors.lightText.g, colors.lightText.b);
+                doc.text('Voice Patterns & Tone', margin + 40, yPos);
+                
+                yPos += 6;
+                
+                doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                const audioAnalysisText = doc.splitTextToSize(reportInfo.audioAnalysis || 'No data available', pageWidth - 2*margin - 10);
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'normal');
+                doc.text(audioAnalysisText, margin + 5, yPos);
+                yPos += (audioAnalysisText.length * 4) + 5;
+                
+                // Text Analysis Detail
+                doc.setFont(undefined, 'bold');
+                doc.setFontSize(9);
+                doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                doc.text('[LINGUISTIC ANALYSIS]', margin, yPos);
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(colors.lightText.r, colors.lightText.g, colors.lightText.b);
+                doc.text('Speech Patterns & Word Choice', margin + 40, yPos);
+                
+                yPos += 6;
+                
+                doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                const textAnalysisText = doc.splitTextToSize(reportInfo.textAnalysis || 'No data available', pageWidth - 2*margin - 10);
+                doc.setFontSize(8);
+                doc.setFont(undefined, 'normal');
+                doc.text(textAnalysisText, margin + 5, yPos);
+                yPos += (textAnalysisText.length * 4) + 3;
+                
+                // PAGE 2: QUESTION-BY-QUESTION ANALYSIS (if detailed data exists)
+                if (detailedData && Object.keys(detailedData).length > 0) {
+                    addPageBreak();
+                    
+                    doc.setFontSize(14);
+                    doc.setFont(undefined, 'bold');
+                    doc.setTextColor(colors.primary.r, colors.primary.g, colors.primary.b);
+                    doc.text('QUESTION-BY-QUESTION ANALYSIS', margin, yPos);
+                    
+                    yPos += 12;
+                    
+                    // Process each question
+                    Object.keys(detailedData).forEach((questionKey, index) => {
+                        if (yPos > pageHeight - 60) {  // Increased threshold for more content
+                            addPageBreak();
+                        }
+                        
+                        const questionData = detailedData[questionKey];
+                        const questionNum = questionKey.replace('question_', '');
+                        
+                        // Question header
+                        doc.setFillColor(240, 240, 240);
+                        doc.rect(margin, yPos, pageWidth - 2*margin, 8, 'F');
+                        
+                        doc.setFontSize(11);
+                        doc.setFont(undefined, 'bold');
+                        doc.setTextColor(colors.primary.r, colors.primary.g, colors.primary.b);
+                        doc.text(`QUESTION ${questionNum}`, margin + 5, yPos + 5);
+                        
+                        yPos += 12;
+                        
+                        // Analysis results for this question
+                        const results = [
+                            { label: 'Video:', value: questionData.video || 'N/A', key: 'video' },
+                            { label: 'Audio:', value: questionData.audio || 'N/A', key: 'audio' },
+                            { label: 'Text:', value: questionData.text || 'N/A', key: 'text' }
+                        ];
+                        
+                        results.forEach(result => {
+                            const isLie = result.value.toLowerCase().includes('lie');
+                            doc.setFontSize(9);
+                            doc.setFont(undefined, 'bold');
+                            doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                            doc.text(result.label, margin + 5, yPos);
+                            
+                            doc.setFont(undefined, 'bold');
+                            doc.setTextColor(
+                                isLie ? colors.accent.r : colors.truth.r,
+                                isLie ? colors.accent.g : colors.truth.g,
+                                isLie ? colors.accent.b : colors.truth.b
+                            );
+                            doc.text(result.value, margin + 30, yPos);
+                            yPos += 6;
+                        });
+                        
+                        // Detailed linguistic markers (if available in text_full)
+                        if (questionData.text_full) {
+                            yPos += 3;
+                            
+                            const textFull = questionData.text_full;
+                            
+                            // Hesitation markers
+                            if (textFull.hesitation && (textFull.hesitation.markers.length > 0 || textFull.hesitation.count > 0)) {
+                                doc.setFontSize(8);
+                                doc.setFont(undefined, 'bold');
+                                doc.setTextColor(colors.warning.r, colors.warning.g, colors.warning.b);
+                                doc.text('HESITATION MARKERS:', margin + 5, yPos);
+                                
+                                doc.setFont(undefined, 'normal');
+                                doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                                const hesitationText = textFull.hesitation.markers.join(', ') || 'None detected';
+                                const wrappedHesitation = doc.splitTextToSize(`Words: ${hesitationText}`, pageWidth - 2*margin - 20);
+                                doc.text(wrappedHesitation, margin + 7, yPos + 4);
+                                yPos += (wrappedHesitation.length * 3) + 6;  // Increased spacing from 2 to 6
+                            }
+                            
+                            // Uncertainty markers
+                            if (textFull.uncertainty && textFull.uncertainty.total_markers > 0) {
+                                doc.setFontSize(8);
+                                doc.setFont(undefined, 'bold');
+                                doc.setTextColor(colors.warning.r, colors.warning.g, colors.warning.b);
+                                doc.text('UNCERTAINTY MARKERS:', margin + 5, yPos);
+                                
+                                doc.setFont(undefined, 'normal');
+                                doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                                const uncertaintyMarkers = [...textFull.uncertainty.uncertainty_words, ...textFull.uncertainty.vague_words];
+                                const uncertaintyText = uncertaintyMarkers.join(', ') || 'None detected';
+                                const wrappedUncertainty = doc.splitTextToSize(`Words: ${uncertaintyText}`, pageWidth - 2*margin - 20);
+                                doc.text(wrappedUncertainty, margin + 7, yPos + 4);
+                                yPos += (wrappedUncertainty.length * 3) + 6;  // Increased spacing from 2 to 6
+                            }
+                            
+                            // Contradiction markers
+                            if (textFull.contradiction && (textFull.contradiction.markers.length > 0 || textFull.contradiction.has_negation_pattern)) {
+                                doc.setFontSize(8);
+                                doc.setFont(undefined, 'bold');
+                                doc.setTextColor(colors.accent.r, colors.accent.g, colors.accent.b);
+                                doc.text('CONTRADICTION MARKERS:', margin + 5, yPos);
+                                
+                                doc.setFont(undefined, 'normal');
+                                doc.setTextColor(colors.text.r, colors.text.g, colors.text.b);
+                                const contradictionText = textFull.contradiction.markers.join(', ') || 'None detected';
+                                const wrappedContradiction = doc.splitTextToSize(`Words: ${contradictionText}`, pageWidth - 2*margin - 20);
+                                doc.text(wrappedContradiction, margin + 7, yPos + 4);
+                                yPos += (wrappedContradiction.length * 3) + 6;  // Increased spacing from 2 to 6
+                            }
+                        }
+                        
+                        // Calculate and display verdict for this question
+                        const videoIsLie = (questionData.video || '').toLowerCase().includes('lie');
+                        const audioIsLie = (questionData.audio || '').toLowerCase().includes('lie');
+                        const textIsLie = (questionData.text || '').toLowerCase().includes('lie');
+                        const lieCount = [videoIsLie, audioIsLie, textIsLie].filter(x => x).length;
+                        const truthCount = 3 - lieCount;
+                        const questionVerdict = lieCount > truthCount ? 'DECEPTIVE' : 'TRUTHFUL';
+                        
+                        yPos += 2;
+                        
+                        // Verdict box
+                        const verdictBoxColor = lieCount > truthCount ? colors.accent : colors.truth;
+                        doc.setDrawColor(verdictBoxColor.r, verdictBoxColor.g, verdictBoxColor.b);
+                        doc.setLineWidth(1);
+                        doc.rect(margin + 5, yPos, pageWidth - 2*margin - 10, 6);
+                        
+                        doc.setFontSize(8);
+                        doc.setFont(undefined, 'bold');
+                        doc.setTextColor(verdictBoxColor.r, verdictBoxColor.g, verdictBoxColor.b);
+                        doc.text(`Question Verdict: ${questionVerdict} (${truthCount} Truth | ${lieCount} Lie)`, margin + 7, yPos + 4);
+                        
+                        yPos += 12;
+                    });
+                }
+                
+                // Add footers to all pages
+                const totalPages = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= totalPages; i++) {
+                    doc.setPage(i);
+                    addPageFooter(i, totalPages);
+                }
+                
+                // Save the PDF
+                const fileName = `Interrogation_Report_${reportInfo.accusedId}_${reportInfo.id.replace('#', '')}_${Date.now()}.pdf`;
+                doc.save(fileName);
+            }
+
+            // Search functionality
+            document.getElementById('search-btn').addEventListener('click', function() {
+                const searchTerm = document.getElementById('search-input').value.toLowerCase();
+                filterTable(searchTerm);
+            });
+
+            document.getElementById('search-input').addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+                    filterTable(searchTerm);
+                }
+            });
+
+            // Filter table rows
+            function filterTable(searchTerm) {
+                const rows = document.querySelectorAll('.reports-table tbody tr');
+                let visibleCount = 0;
+                
+                rows.forEach(row => {
+                    const rowText = row.textContent.toLowerCase();
+                    if (rowText.includes(searchTerm) || searchTerm === '') {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                // Show empty state if no rows visible
+                const emptyState = document.querySelector('.empty-state');
+            }
+
+            // Show Scenario Modal
+            function showScenarioModal(element) {
+                const reportId = element.getAttribute('data-report-id');
+                const scenario = element.getAttribute('data-scenario');
+                const questions = element.getAttribute('data-questions');
+                
+                // Debug logging
+                console.log('=== DEBUG INFO ===');
+                console.log('Report ID:', reportId);
+                console.log('Raw scenario data:', scenario);
+                console.log('Raw questions data:', questions);
+                console.log('Scenario type:', typeof scenario);
+                console.log('Questions type:', typeof questions);
+                console.log('Scenario length:', scenario ? scenario.length : 0);
+                console.log('Questions length:', questions ? questions.length : 0);
+                
+                // Get detailed report data from the view button
+                const reportRow = element.closest('tr');
+                const viewButton = reportRow.querySelector('.view-report-btn');
+                const onclickAttribute = viewButton.getAttribute('onclick');
+                console.log('Raw onclick attribute:', onclickAttribute);
+                
+                let reportData;
+                try {
+                    const match = onclickAttribute.match(/'([^']+)'/);
+                    if (match) {
+                        reportData = match[1];
+                        console.log('Extracted report data:', reportData.substring(0, 200) + '...');
+                    } else {
+                        console.error('Could not extract report data from onclick attribute');
+                        displayNoScenarioData();
+                        return;
+                    }
+                } catch (e) {
+                    console.error('Error extracting report data:', e);
+                    displayNoScenarioData();
+                    return;
+                }
+                
+                document.getElementById('scenario-report-id').textContent = reportId;
+                
+                let detailedData = {};
+                try {
+                    // Fix Unicode escaped quotes and parse JSON
+                    const fixedReportData = reportData.replace(/\\u0027/g, "'");
+                    detailedData = JSON.parse(fixedReportData);
+                    console.log('Detailed report data parsed successfully');
+                } catch (e) {
+                    console.error('Error parsing detailed report data:', e);
+                    console.log('Problematic data:', reportData);
+                    // Continue with empty detailed data - still show scenario and questions
+                    detailedData = {};
+                }
+                
+                // More lenient validation - just check if scenario exists and has content
+                const hasValidScenario = scenario && scenario !== 'None' && scenario !== 'null' && scenario.trim().length > 0;
+                console.log('Has valid scenario:', hasValidScenario);
+                
+                if (hasValidScenario) {
+                    let parsedQuestions = null;
+                    try {
+                        if (questions && questions !== 'None' && questions !== 'null' && questions !== '[]' && questions.trim() !== '') {
+                            // Fix Unicode escaped quotes and parse JSON
+                            const fixedQuestions = questions.replace(/\\u0027/g, "'");
+                            parsedQuestions = JSON.parse(fixedQuestions);
+                            console.log('Questions parsed successfully:', parsedQuestions);
+                        } else {
+                            console.log('Questions empty or invalid, using null');
+                        }
+                    } catch (e) {
+                        console.error('Error parsing questions:', e);
+                        console.log('Raw questions that failed to parse:', questions);
+                        parsedQuestions = null;
+                    }
+                    console.log('Using real scenario and questions');
+                    console.log('Final scenario:', scenario.substring(0, 100) + '...');
+                    console.log('Final questions:', parsedQuestions);
+                    displayScenarioAndQuestions(detailedData, scenario, parsedQuestions);
+                } else {
+                    console.log('Using fallback data - scenario validation failed');
+                    console.log('Scenario check result:', {
+                        exists: !!scenario,
+                        notNone: scenario !== 'None',
+                        notNull: scenario !== 'null',
+                        notEmpty: scenario.trim() !== '',
+                        hasLength: scenario.trim().length > 0
+                    });
+                    displayScenarioAndQuestions(detailedData);
+                }
+                
+                document.getElementById('scenario-modal').style.display = 'block';
+            }
+
+            // Close Scenario Modal
+            function closeScenarioModal() {
+                document.getElementById('scenario-modal').style.display = 'none';
+            }
+
+            // Display Scenario and Questions
+            function displayScenarioAndQuestions(detailedData, scenario='', questions=null) {
+                // Use provided scenario and questions, or fall back to sample data
+                const actualScenario = scenario || "A suspect is being questioned about their whereabouts during a warehouse robbery that occurred at 11:30 PM. CCTV footage places a person of similar appearance near the location, but the suspect claims to have been at home.";
+                const actualQuestions = questions || [
+                    "Where were you on the night of the warehouse robbery?",
+                    "Can anyone confirm your alibi for that evening?",
+                    "Why does CCTV footage show someone matching your description near the crime scene?",
+                    "Do you have any relationship with the warehouse owner?",
+                    "Were you aware that a robbery was planned for that night?"
+                ];
+                
+                // Display scenario
+                document.getElementById('scenario-content').innerHTML = `
+                    <i class="fas fa-info-circle"></i> ${actualScenario}
+                `;
+                
+                // Display questions
+                const questionsList = document.getElementById('questions-list');
+                questionsList.innerHTML = '';
+                
+                actualQuestions.forEach((question, index) => {
+                    const questionNumber = index + 1;
+                    
+                    const li = document.createElement('li');
+                    li.className = 'question-item';
+                    li.innerHTML = `
+                        <div class="question-number">${questionNumber}</div>
+                        <div class="question-text">
+                            <strong>${question}</strong>
+                        </div>
+                    `;
+                    questionsList.appendChild(li);
+                });
+            }
+
+            // Get color for analysis result
+            function getAnalysisColor(result) {
+                if (!result) return '#6b7280';
+                const resultUpper = result.toUpperCase();
+                if (resultUpper === 'TRUTH') return '#10b981';
+                if (resultUpper === 'LIE') return '#ef4444';
+                if (resultUpper === 'NO_DATA') return '#6b7280';
+                return '#f59e0b'; // For other cases
+            }
+
+            // Display no data message
+            function displayNoScenarioData() {
+                document.getElementById('scenario-content').innerHTML = `
+                    <div class="no-data-message">
+                        <i class="fas fa-exclamation-triangle"></i> Scenario data not available for this report.
+                    </div>
+                `;
+                
+                document.getElementById('questions-list').innerHTML = `
+                    <div class="no-data-message">
+                        <i class="fas fa-question-circle"></i> Questions data not available for this report.
+                    </div>
+                `;
+            }
+
+            // Initialize with some sample data if needed
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add sample statistics if not provided by Django
+                if (!document.querySelector('.stat-card h3').textContent.trim()) {
+                    document.querySelectorAll('.stat-card h3').forEach((el, index) => {
+                        const stats = [125, 78, 42, 5];
+                        el.textContent = stats[index];
+                    });
+                }
+                
+                // Close modal on escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        closeReportModal();
+                        closeScenarioModal();
+                    }
+                });
+            });
+        </script>
+</body>
+</html>
